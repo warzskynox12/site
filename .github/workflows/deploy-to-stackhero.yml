@@ -1,0 +1,22 @@
+# File: .github/workflows/deploy-to-stackhero.yml
+
+name: Deploy to Stackhero
+run-name: Deploy branch "${{ github.ref_name }}" to Stackhero
+
+on:
+  push:
+    # Liste des branches qui déclencheront l'action de déploiement lors d'un "git push".
+    # N'oubliez pas de créer un environnement correspondant au nom de la branche dans GitHub (dans "Settings"/"Environments").
+    # Puis ajoutez le secret correspondant "STACKHERO_SSH_PRIVATE_KEY" et la variable "STACKHERO_ENDPOINT" dans cet environnement.
+    branches: [ "production", "staging" ]
+
+jobs:
+  Deploy:
+    environment: ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: stackhero-io/github-actions-deploy-to-stackhero@v1
+      with:
+        # Le secret "STACKHERO_SSH_PRIVATE_KEY" et la variable "STACKHERO_ENDPOINT" doivent être définis dans l'environnement de la branche correspondante sur GitHub sous "Settings"/"Environments".
+        ssh_private_key: ${{ secrets.STACKHERO_SSH_PRIVATE_KEY }}
+        endpoint: ${{ vars.STACKHERO_ENDPOINT }}
